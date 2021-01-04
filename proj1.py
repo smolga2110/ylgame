@@ -11,7 +11,6 @@ drawings = {1: [[1, 0, 1, 0, 1], [0, 1, 1, 1, 0], [1, 1, 0, 1, 1],
             8: None,
             9: None}
 
-#pygame.font.SysFont('arial', 36)
 
 pygame.init()
 
@@ -37,7 +36,7 @@ class Board:
         self.top = top
         self.cell_size = cell_size
 
-    def render(self):
+    def render1(self):
         for y in range(self.height):
             for x in range(self.width):
                 if self.board[y][x] == 1:
@@ -77,9 +76,9 @@ class Board:
 size = (500, 500)
 screen = pygame.display.set_mode(size)
 
-board = Board(len(drawings[1]))
-
-flag = 3
+board = Board(len(drawings[int(input())]))
+screen.fill((0, 0, 0))
+flag = 3 #cердечки
 
 running = True
 while running:
@@ -89,7 +88,9 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             board.get_click(event.pos)
 
-    screen.fill((0, 0, 0))
-    board.render()
+    f1 = pygame.font.SysFont('arial', 36)
+    text1 = f1.render(f'Уровень {1}', True,(255, 255, 255))   #шрифт
+    screen.blit(text1, (170, 50))  #шрифт
+    board.render1()
     pygame.display.flip()
 pygame.quit()
