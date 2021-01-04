@@ -11,6 +11,8 @@ drawings = {1: [[1, 0, 1, 0, 1], [0, 1, 1, 1, 0], [1, 1, 0, 1, 1],
             8: None,
             9: None}
 
+#pygame.font.SysFont('arial', 36)
+
 pygame.init()
 
 
@@ -61,10 +63,15 @@ class Board:
             self.on_click(cell)
 
     def on_click(self, cell_coords):
+        global flag
         cell_x = int(cell_coords[0])
         cell_y = int(cell_coords[1])
         if not(cell_x < 0 or cell_x >= self.width or cell_y < 0 or cell_y >= self.height):
-            self.board[cell_y][cell_x] = (self.board[cell_y][cell_x] + 1) % 2
+            if self.board[cell_y][cell_x] != 1 and drawings[1][cell_y][cell_x] == 1:
+                self.board[cell_y][cell_x] = (self.board[cell_y][cell_x] + 1) % 2
+            else:
+                flag -= 1
+            #print(drawings[1][cell_y][cell_x])
 
 
 size = (500, 500)
@@ -72,10 +79,12 @@ screen = pygame.display.set_mode(size)
 
 board = Board(len(drawings[1]))
 
+flag = 3
+
 running = True
 while running:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT or flag == 0:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             board.get_click(event.pos)
