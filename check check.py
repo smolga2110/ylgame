@@ -1,17 +1,64 @@
 import pygame
 import sqlite3
 
-drawings = {1: [[1, 0, 1, 0, 1], [0, 1, 1, 1, 0], [1, 1, 0, 1, 1],
-                [0, 1, 1, 1, 0], [1, 0, 1, 0, 1]],
-            2: None,
-            3: None,
-            4: None,
-            5: None,
-            6: None,
-            7: None,
-            8: None,
-            9: None}
-
+drawings = {1: [[0, 1, 1, 0, ],
+                [0, 1, 1, 0],
+                [1, 1, 1, 1],
+                [0, 1, 1, 0],
+                [1, 0, 0, 1]],
+            2: [[1, 0, 1, 0, 1],
+                [0, 1, 1, 1, 0],
+                [1, 1, 0, 1, 1],
+                [0, 1, 1, 1, 0],
+                [1, 0, 1, 0, 1]],
+            3: [[0, 0, 1, 0, 0],
+                [0, 1, 1, 1, 0],
+                [1, 1, 1, 1, 1],
+                [1, 0, 1, 0, 1],
+                [1, 1, 1, 1, 1]],
+            4: [[0, 0, 1, 1, 0, 0, ],
+                [0, 1, 0, 0, 1, 0],
+                [0, 1, 0, 0, 1, 0],
+                [0, 0, 0, 0, 1, 0],
+                [0, 0, 0, 0, 1, 0],
+                [0, 0, 0, 0, 1, 0]],
+            5: [[0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0],
+                [1, 0, 0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1, 1],
+                [0, 0, 0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0]],
+            6: [[1, 0, 0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1, 1],
+                [0, 1, 0, 1, 0, 1, 0],
+                [0, 1, 1, 1, 1, 1, 0],
+                [1, 1, 0, 1, 0, 1, 1],
+                [1, 1, 1, 1, 1, 1, 1],
+                [0, 1, 1, 1, 1, 1, 0]],
+            7: [[0, 0, 1, 0, 1, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0],
+                [0, 1, 1, 0, 1, 1, 0],
+                [0, 1, 1, 0, 1, 1, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 0, 1, 1, 0],
+                [0, 1, 1, 0, 1, 1, 0]],
+            8: [[0, 0, 0, 0, 0, 1, 0, 0, 0],
+                [0, 0, 0, 1, 1, 1, 1, 1, 0],
+                [0, 0, 0, 1, 1, 1, 1, 1, 0],
+                [0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 0, 0]],
+            9: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0],
+                [0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0],
+                [0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0],
+                [0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0],
+                [0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]}
 pygame.init()
 
 
@@ -190,23 +237,22 @@ while running:
             image_game_background = pygame.image.load('IMG_2146.jpg').convert_alpha()
             screen.blit(image_game_background, (0, 0))
             flag = 3
-            #f1 = pygame.font.SysFont('ofont.ru_President.ttf', 100)
-            #text1 = f1.render(f'Уровень {1}', True, (0, 0, 0))  # шрифт
-            #screen.blit(text1, (size[0] / 2 - 200, 50))  # шрифт
+            # f1 = pygame.font.SysFont('ofont.ru_President.ttf', 100)
+            # text1 = f1.render(f'Уровень {1}', True, (0, 0, 0))  # шрифт
+            # screen.blit(text1, (size[0] / 2 - 200, 50))  # шрифт
             board.render1()
 
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and level_page:
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and level_page and flag != 0:
             board.get_click(event.pos)
-            #f1 = pygame.font.SysFont('ofont.ru_President.ttf', 100)
-            #text1 = f1.render(f'Уровень {1}', True, (0, 0, 0))  # шрифт
-            #screen.blit(text1, (size[0] / 2 - 200, 50))  # шрифт
+            # f1 = pygame.font.SysFont('ofont.ru_President.ttf', 100)
+            # text1 = f1.render(f'Уровень {1}', True, (0, 0, 0))  # шрифт
+            # screen.blit(text1, (size[0] / 2 - 200, 50))  # шрифт
             board.render1()
         if flag == 0 and level_page:
-            #f1 = pygame.font.SysFont('ofont.ru_President.ttf', 100)
-            #text1 = f1.render('Вы проиграли', True, (0, 0, 0))  # шрифт
-            #screen.blit(text1, (size[0] / 2 - 255, 700))
+            f2 = pygame.font.SysFont('ofont.ru_President.ttf', 100)
+            text2 = f2.render('Вы проиграли', True, (0, 0, 0))  # шрифт
+            screen.blit(text2, (size[0] / 2 - 255, 700))
             pass
-
 
     pygame.display.flip()
 pygame.quit()
