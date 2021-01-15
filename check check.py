@@ -118,13 +118,40 @@ class Board:
 
     def on_click(self, cell_coords):
         global flag
+        global nameExists
         cell_x = int(cell_coords[0])
         cell_y = int(cell_coords[1])
         if not (cell_x < 0 or cell_x >= self.width or cell_y < 0 or cell_y >= self.height):
             if self.board[cell_y][cell_x] != 1 and drawings[level][cell_y][cell_x] == 1:
                 self.board[cell_y][cell_x] = (self.board[cell_y][cell_x] + 1) % 2
+                cur = con.cursor()
+            #  cur.execute("""SELECT coords FROM level_coords""")
+            #  for row in cur:
+            #      result = row[0]
+            #      if result:
+            #          nameExists = True
+            #      else:
+            #         nameExists = False
+            # if not nameExists:
+            #     cur.execute("""INSERT INTO level_coords(coords, level) VALUES (%r), (%s)""",
+            #                 (tuple(self.board), id))
+
+            # else:
+            #     cur.execute("""SELECT level FROM level_coords WHERE coords = %r""", self.board)
+            #     for row in cur:
+            #         actualId = row[0]
+            #     actualId = actualId + 1
+            #     cur.execute("""UPDATE level_coords SET level = %s WHERE coords = %r;""", actualId,
+            #                (tuple(self.board)))
+
             else:
                 flag -= 1
+                if flag == 2:
+                    screen.blit(image_kill_heart, (760, 700))
+                elif flag == 1:
+                    screen.blit(image_kill_heart, (860, 700))
+                elif flag == 0:
+                    screen.blit(image_kill_heart, (960, 700))
 
 
 def level_info(event_pos):
@@ -152,6 +179,8 @@ image_gears = pygame.image.load('ну а это че.png').convert_alpha()
 image_gears_tap = pygame.image.load('ну а это че нажали.png').convert_alpha()
 image_question_tap = pygame.image.load('нифига умный вопрос нажали.png').convert_alpha()
 image_button_game = pygame.image.load('кнопка игры.png').convert_alpha()
+image_level_but = pygame.image.load('проверка.png').convert_alpha()
+image_check_but = pygame.image.load('проверка нажали.png').convert_alpha()
 screen.blit(image, (0, 0))
 screen.blit(image_question, (1574, 22))
 screen.blit(image_gears, (1690, 22))
@@ -159,6 +188,7 @@ screen.blit(image_button_game, ((1070, 635)))
 clock = pygame.time.Clock()
 
 first_page = True
+info_page = False
 second_page = False
 level_page = False
 flag = 0
@@ -171,9 +201,43 @@ while running:
         if event.type == pygame.MOUSEBUTTONUP and 1574 <= event.pos[0] <= 1574 + 73 and \
                 22 <= event.pos[1] <= 22 + 73 and first_page:
             screen.blit(image_question, (1574, 22))
+            image_helpa = pygame.image.load('катянебей это хелп.png').convert_alpha()
+            screen.blit(image_helpa, (0, 0))
+            image_go_back = pygame.image.load('назад.png').convert_alpha()
+            screen.blit(image_go_back, (15, 15))
+            first_page = False
+            info_page = True
+            second_page = False
+            level_page = False
+            screen.blit(image_gears, (1690, 22))
+
         elif event.type == pygame.MOUSEBUTTONDOWN and 1574 <= event.pos[0] <= 1574 + 73 and \
                 22 <= event.pos[1] <= 22 + 73 and first_page:
             screen.blit(image_question_tap, (1574, 22))
+
+        if event.type == pygame.MOUSEBUTTONUP and 1690 <= event.pos[0] <= 1690 + 73 and \
+                22 <= event.pos[1] <= 22 + 73 and info_page:
+            screen.blit(image_gears, (1690, 22))
+        elif event.type == pygame.MOUSEBUTTONDOWN and 1690 <= event.pos[0] <= 1690 + 73 and \
+                22 <= event.pos[1] <= 22 + 73 and info_page:
+            screen.blit(image_gears_tap, (1690, 22))
+
+        if event.type == pygame.MOUSEBUTTONUP and 15 <= event.pos[0] <= 15 + 73 and \
+                15 <= event.pos[1] <= 15 + 73 and info_page:
+            image_go_back = pygame.image.load('назад.png').convert_alpha()
+            screen.blit(image_go_back, (15, 15))
+            first_page = True
+            info_page = False
+            second_page = False
+            level_page = False
+            screen.blit(image, (0, 0))
+            screen.blit(image_question, (1574, 22))
+            screen.blit(image_gears, (1690, 22))
+            screen.blit(image_button_game, ((1070, 635)))
+        elif event.type == pygame.MOUSEBUTTONDOWN and 15 <= event.pos[0] <= 15 + 73 and \
+                15 <= event.pos[1] <= 15 + 73 and info_page:
+            image_go_back_tap = pygame.image.load('назад нажали.png').convert_alpha()
+            screen.blit(image_go_back_tap, (15, 15))
 
         if event.type == pygame.MOUSEBUTTONUP and 1690 <= event.pos[0] <= 1690 + 73 and \
                 22 <= event.pos[1] <= 22 + 73 and first_page:
@@ -189,6 +253,7 @@ while running:
             image_go_back = pygame.image.load('назад.png').convert_alpha()
             screen.blit(image_go_back, (15, 15))
             first_page = False
+            info_page = False
             second_page = True
             level_page = False
             screen.blit(image_question, (1574, 22))
@@ -203,6 +268,7 @@ while running:
             image_go_back = pygame.image.load('назад.png').convert_alpha()
             screen.blit(image_go_back, (15, 15))
             first_page = True
+            info_page = False
             second_page = False
             level_page = False
             screen.blit(image, (0, 0))
@@ -217,6 +283,16 @@ while running:
         if event.type == pygame.MOUSEBUTTONUP and 1574 <= event.pos[0] <= 1574 + 73 and \
                 22 <= event.pos[1] <= 22 + 73 and second_page:
             screen.blit(image_question, (1574, 22))
+            screen.blit(image_question, (1574, 22))
+            image_helpa = pygame.image.load('катянебей это хелп.png').convert_alpha()
+            screen.blit(image_helpa, (0, 0))
+            image_go_back = pygame.image.load('назад.png').convert_alpha()
+            screen.blit(image_go_back, (15, 15))
+            first_page = False
+            info_page = True
+            second_page = False
+            level_page = False
+            screen.blit(image_gears, (1690, 22))
         elif event.type == pygame.MOUSEBUTTONDOWN and 1574 <= event.pos[0] <= 1574 + 73 and \
                 22 <= event.pos[1] <= 22 + 73 and second_page:
             screen.blit(image_question_tap, (1574, 22))
@@ -252,22 +328,43 @@ while running:
             second_page = False
             level_page = True
             board = Board(drawings[level])
-            image_game_background = pygame.image.load('уровень.png').convert_alpha()
+            image_game_background = pygame.image.load(f'уровень {level} фон.png').convert_alpha()
             screen.blit(image_game_background, (0, 0))
             image_go_back = pygame.image.load('назад.png').convert_alpha()
+            image_kill_heart = pygame.image.load('сердце пустое.png').convert_alpha()
+            image_heart = pygame.image.load('сердце полное.png').convert_alpha()
+            print(level)
+            image_level_strok = pygame.image.load(f'уровень {level} надпись.png').convert_alpha()
+            image_level_but = pygame.image.load('проверка.png').convert_alpha()
+            image_check_but = pygame.image.load('проверка нажали.png').convert_alpha()
+            screen.blit(image_level_but, (1100, 400))
+            if level == 4 or 8:
+                screen.blit(image_level_strok, (690, 75))
+            else:
+                screen.blit(image_level_strok, (690, 130))
+            a = screen.blit(image_heart, (760, 700))
+            b = screen.blit(image_heart, (860, 700))
+            c = screen.blit(image_heart, (960, 700))
             screen.blit(image_go_back, (15, 15))
             flag = 3
             screen.blit(image_question, (1574, 22))
             screen.blit(image_gears, (1690, 22))
             board.render1()
 
+        if event.type == pygame.MOUSEBUTTONUP and 1100 <= event.pos[0] <= 1100 + 600 and \
+                400 <= event.pos[1] <= 400 + 140 and level_page:
+            screen.blit(image_level_but, (1100, 400))
+        elif event.type == pygame.MOUSEBUTTONDOWN and 1100 <= event.pos[0] <= 1100 + 600 and \
+                400 <= event.pos[1] <= 400 + 140 and level_page:
+            screen.blit(image_check_but, (1100, 400))
+
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and level_page and flag != 0:
             board.get_click(event.pos)
             board.render1()
         if flag == 0 and level_page:
             f2 = pygame.font.SysFont('ofont.ru_President.ttf', 100)
-            text2 = f2.render('Вы проиграли', True, (0, 0, 0))  # шрифт
-            screen.blit(text2, (size[0] / 2 - 255, 790))
+            image_you_lose = pygame.image.load('проиграли.png').convert_alpha()
+            screen.blit(image_you_lose, (600, 760))
 
         if event.type == pygame.MOUSEBUTTONUP and 15 <= event.pos[0] <= 15 + 73 and \
                 15 <= event.pos[1] <= 15 + 73 and level_page:
@@ -288,6 +385,17 @@ while running:
         if event.type == pygame.MOUSEBUTTONUP and 1574 <= event.pos[0] <= 1574 + 73 and \
                 22 <= event.pos[1] <= 22 + 73 and level_page:
             screen.blit(image_question, (1574, 22))
+            screen.blit(image_question, (1574, 22))
+            screen.blit(image_question, (1574, 22))
+            image_helpa = pygame.image.load('катянебей это хелп.png').convert_alpha()
+            screen.blit(image_helpa, (0, 0))
+            image_go_back = pygame.image.load('назад.png').convert_alpha()
+            screen.blit(image_go_back, (15, 15))
+            first_page = False
+            info_page = True
+            second_page = False
+            level_page = False
+            screen.blit(image_gears, (1690, 22))
         elif event.type == pygame.MOUSEBUTTONDOWN and 1574 <= event.pos[0] <= 1574 + 73 and \
                 22 <= event.pos[1] <= 22 + 73 and level_page:
             screen.blit(image_question_tap, (1574, 22))

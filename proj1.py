@@ -1,4 +1,7 @@
 import pygame
+import sqlite3
+import pandas as pd
+from sqlalchemy import create_engine
 
 drawings = {1: [[1, 0, 1, 0, 1], [0, 1, 1, 1, 0], [1, 1, 0, 1, 1],
                 [0, 1, 1, 1, 0], [1, 0, 1, 0, 1]],
@@ -18,6 +21,7 @@ pygame.init()
 class Board:
     # создание поля
     def __init__(self, width):
+
         height = width
         cell_size = 50
         left = (size[0] / 2) - (width * cell_size / 2)
@@ -25,6 +29,8 @@ class Board:
         self.width = width
         self.height = height
         self.board = [[0] * width for _ in range(height)]
+
+        "UPDATE INTO nonagramm SET %r;" % (tuple(self.board),)
 
         self.left = 0
         self.top = 0
