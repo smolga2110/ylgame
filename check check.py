@@ -364,8 +364,11 @@ while running:
                 400 <= event.pos[1] <= 400 + 140 and level_page:
             screen.blit(image_level_but, (1100, 400))
             if ab == cosrs[level - 1]:
+                myfont = pygame.font.SysFont('ofont.ru_President.ttf', 100)
+                textsurface = myfont.render('УРОВЕНЬ ПРОЙДЕН', True, (0, 0, 0))
                 print('YOU WIN')
-                screen.blit(textsurface, (760, 500))
+                screen.blit(textsurface, (550, 800))
+                pygame.display.update()
                 pygame.time.wait(4000)
                 image_level_spisok = pygame.image.load('sprites/заставка фона для уровней.png').convert_alpha()
                 screen.blit(image_level_spisok, (0, 0))
