@@ -1,53 +1,63 @@
-import pygame
-import sys
+import pygame as pg
 
-def main():
-    pygame.init()
-    screen = pygame.display.set_mode((windowWidth, windowHeight))
-    pygame.display.set_caption('Test')
-    background = pygame.image.load('background.jpg')
-    screen.blit(background, (0,0))
-    face = pygame.image.load('text.gif')
-    b = screen.blit(face, (300, 300))
+screen_rect = (0, 0, 50, 100)
 
 
+class Particle(pg.sprite.Sprite):
+    # сгенерируем частицы разного размера
+    fire = [pg.image.load("star.png")]
+    for scale in (5, 10, 20):
+        fire.append(pg.transform.scale(fire[0], (scale, scale)))
 
-    while 1:
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.MOUSEMOTION:
-                x, y = event.pos
-                if b.collidepoint(x, y):
-                    face = pygame.image.load('background.jpg')
-                    b = screen.blit(face, (300, 300))
-                else:
-                    face = face = pygame.image.load('text.gif')
-                    b = screen.blit(face, (300, 300))
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                x, y = event.pos
-                if b.collidepoint(x, y):
-                    print("button has been clicked")
+    def __init__(self, pos, dx, dy):
+        super().__init__(all_sprites)
+        self.image = random.choice(self.fire)
+        self.rect = self.image.get_rect()
+
+        # у каждой частицы своя скорость — это вектор
+        self.velocity = [dx, dy]
+        # и свои координаты
+        self.rect.x, self.rect.y = pos
+
+        # гравитация будет одинаковой (значение константы)
+        self.gravity = GRAVITY
+
+    def update(self):
+        # применяем гравитационный эффект:
+        # движение с ускорением под действием гравитации
+        self.velocity[1] += self.gravity
+        # перемещаем частицу
+        self.rect.x += self.velocity[0]
+        self.rect.y += self.velocity[1]
+        # убиваем, если частица ушла за экран
+        if not self.rect.colliderect(screen_rect):
+            self.kill()
+
+    def create_particles(position):
+        # количество создаваемых частиц
+        particle_count = 20
+        # возможные скорости
+        numbers = range(-5, 6)
+        for _ in range(particle_count):
+            Particle(position, random.choice(numbers), random.choice(numbers))
 
 
+all_sprites = pg.sprite.Group()
+clock = pg.time.Clock()
+pg.init()
+running = True
+while running:
+    for event in pg.event.get():
+        if event.type == pg.QUIT:
+            running = False
+        if event.type == pg.MOUSEBUTTONDOWN:
+            # создаём частицы по щелчку мыши
+            create_particles(pg.mouse.get_pos())
 
-        pygame.display.update()
-class HelloWorld:
-    f1 = pygame.font.Font(None, 36)
-    text1 = f1.render('Hello Привет', True,
-                      (180, 0, 0))
+    all_sprites.update()
+    screen.fill((0, 0, 0))
+    all_sprites.draw(screen)
+    pg.display.flip()
+    clock.tick(50)
 
-
-
-
-if __name__ == "__main__":
-    def _creator():
-        screen2 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),0,32)
-        hello = HelloWorld(screen2)
-        hello.run()
-    MENU_ITEMS = ("Welcome", "Exit")
-    SCREEN = pygame.display.set_mode((800, 600), 0, 32)
-    FUNCS = {"Welcome": _creator, "Exit": sys.exit}
-    GM = Main(SCREEN, FUNCS.keys(), FUNCS)
-    GM.run()
+pygame.quit()
