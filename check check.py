@@ -131,22 +131,15 @@ class Board:
             if self.board[cell_y][cell_x] != 1 and drawings[level][cell_y][cell_x] == 1:
                 self.board[cell_y][cell_x] = (self.board[cell_y][cell_x] + 1) % 2
                 tmp = json.dumps(self.board)
-                sql = "SELECT coords FROM level_coords WHERE level=?"
-                gg = self.cur.execute(sql, [f"{level}"])
-                fff = gg.fetchall()
-                print(fff)
-                if fff is None:
-                    self.cur.execute('insert into level_coords values(?, ?)', (level, tmp,))
+                sql = self.cur.execute("SELECT points FROM level_coords WHERE level=?", (level,))
+                fff = sql.fetchall()
+                if fff is not None:
+                    self.cur.execute('update level_coords set points=?', (tmp,))
                     self.conn.commit()
-                    self.cur.execute('select * from tbl')
-                    data = self.cur.fetchall()
-                    for line in data:
-                        print(json.loads(line[0]))
-                elif fff is not None:
-                    self.cur.execute('update level_coords set coords=?', (tmp,))
-                    data = self.cur.fetchall()
-                    for line in data:
-                        print(json.loads(line[0]))
+                    datas = self.cur.fetchall()
+                    print(fff)
+                    for linei in datas:
+                        print(json.loads(linei[0]))
                 ab += 1
                 print('+1')
                 cur = con.cursor()
@@ -379,11 +372,42 @@ while running:
         elif event.type == pygame.MOUSEBUTTONUP and level_info(event.pos)[0] and second_page:
             level = level_info(event.pos)[1]
             image_level_button = pygame.image.load(f'sprites/уровень {level}.png').convert_alpha()
-            con = sqlite3.connect('nonagramm.db')
-            cur = con.cursor()
-            result = cur.execute('''SELECT coords
+            conik = sqlite3.connect('nonagramm.db')
+            curik = conik.cursor()
+            result = curik.execute('''SELECT coords
                                                   FROM level_coords
                                                   WHERE level = ?''', (level,)).fetchall()
+            con = sqlite3.connect('nonagramm.db')
+            cur = conik.cursor()
+            tmp = json.dumps(drawings[level])
+            print(tmp)
+            for i in range(9):
+                dbl = cur.execute("SELECT level FROM level_coords WHERE level=?", (i + 1,))
+                con.commit()
+                lgd = dbl.fetchall()
+                print(lgd)
+                if dbl is None:
+                    for k in range(9):
+                        bbc = cur.execute('insert into level_coords values(?)', (k + 1,))
+                        con.commit()
+                        kbk = bbc.fetchall()
+                        print(kbk)
+            for i in range(9):
+                sql = cur.execute("SELECT points FROM level_coords WHERE level=?", (i + 1,))
+                fff = sql.fetchall()
+                print(fff)
+                if fff is None:
+                    bfg = cur.execute('INSERT INTO level_coords(points) VALUES(?)', (tmp,))
+                    con.commit()
+                    nnb = bfg.fetchall()
+                    print(nnb)
+            ddd = cur.execute("SELECT points FROM level_coords WHERE level=?", (level,)).fetchall()
+            print(ddd)
+            acv = None
+        #    if ddd is not None:
+        #        for v in ddd:
+        #            acv = json.loads(v[0])
+        #    print(acv)
             x, y = list(map(lambda x: int(x), result[0][0].split()))
             screen.blit(image_level_button, (x, y))
             first_page = False
@@ -391,6 +415,7 @@ while running:
             settings_page = False
             second_page = False
             level_page = True
+
             board = Board(drawings[level])
             image_game_background = pygame.image.load(f'sprites\уровень {level} фон.png').convert_alpha()
             screen.blit(image_game_background, (0, 0))
@@ -422,12 +447,16 @@ while running:
                 400 <= event.pos[1] <= 400 + 140 and level_page:
             screen.blit(image_level_but, (1100, 400))
             if ab == cosrs[level - 1]:
+                connn = sqlite3.connect("nonagramm.db")
+                cursorr = connn.cursor()
                 myfont = pygame.font.SysFont('ofont.ru_President.ttf', 100)
                 textsurface = myfont.render('УРОВЕНЬ ПРОЙДЕН', True, (0, 0, 0))
                 print('YOU WIN')
                 screen.blit(textsurface, (550, 800))
                 pygame.display.update()
                 pygame.time.wait(4000)
+                cursorr.execute("DELETE FROM level_coords WHERE points = ?", (not None,))
+                connn.commit()
                 image_level_spisok = pygame.image.load('sprites/заставка фона для уровней.png').convert_alpha()
                 screen.blit(image_level_spisok, (0, 0))
                 image_go_back = pygame.image.load('sprites/назад.png').convert_alpha()
