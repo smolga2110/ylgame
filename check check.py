@@ -213,6 +213,8 @@ level_page = False
 flag = 0
 ab = 0
 
+global text
+
 running = True
 while running:
     for event in pygame.event.get():
@@ -249,6 +251,60 @@ while running:
             second_page = False
             level_page = False
             screen.blit(image_question, (1574, 22))
+            font = pygame.font.Font(None, 100)
+            clock = pygame.time.Clock()
+            input_box = pygame.Rect(500, 300, 10, 200)
+            color_inactive = pygame.Color('lightskyblue3')
+            color_active = pygame.Color('dodgerblue2')
+            color = color_inactive
+            active = False
+            text = ''
+            done = False
+
+            while not done:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        done = True
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        # If the user clicked on the input_box rect.
+                        if input_box.collidepoint(event.pos):
+                            # Toggle the active variable.
+                            active = not active
+                        else:
+                            active = False
+                        # Change the current color of the input box.
+                        color = color_active if active else color_inactive
+                    if event.type == pygame.KEYDOWN:
+                        if active:
+                            if event.key == pygame.K_RETURN:
+                                print(text)
+                                con = sqlite3.connect('users.db')
+                                cur = con.cursor()
+                                result = cur.execute('''SELECT account
+                                                          FROM user WHERE account = ?''', (text,)).fetchall()
+                                print(result)
+                                if result is None:
+                                    cur.execute('INSERT INTO user VALUES(?, ?)', (text, None,))
+                                    con.commit()
+                                text = ''
+                            elif event.key == pygame.K_BACKSPACE:
+                                text = text[:-1]
+                            else:
+                                text += event.unicode
+
+                screen.fill((30, 30, 30))
+                # Render the current text.
+                txt_surface = font.render(text, True, color)
+                # Resize the box if the text is too long.
+                width = max(800, txt_surface.get_width() + 10)
+                input_box.w = width
+                # Blit the text.
+                screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+                # Blit the input_box rect.
+                pygame.draw.rect(screen, color, input_box, 2)
+
+                pygame.display.flip()
+                clock.tick(30)
         elif event.type == pygame.MOUSEBUTTONDOWN and 1690 <= event.pos[0] <= 1690 + 73 and \
                 22 <= event.pos[1] <= 22 + 73 and info_page:
             screen.blit(image_gears_tap, (1690, 22))
@@ -284,6 +340,60 @@ while running:
             second_page = False
             level_page = False
             screen.blit(image_question, (1574, 22))
+            font = pygame.font.Font(None, 100)
+            clock = pygame.time.Clock()
+            input_box = pygame.Rect(500, 300, 10, 200)
+            color_inactive = pygame.Color('lightskyblue3')
+            color_active = pygame.Color('dodgerblue2')
+            color = color_inactive
+            active = False
+            text = ''
+            done = False
+
+            while not done:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        done = True
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        # If the user clicked on the input_box rect.
+                        if input_box.collidepoint(event.pos):
+                            # Toggle the active variable.
+                            active = not active
+                        else:
+                            active = False
+                        # Change the current color of the input box.
+                        color = color_active if active else color_inactive
+                    if event.type == pygame.KEYDOWN:
+                        if active:
+                            if event.key == pygame.K_RETURN:
+                                print(text)
+                                con = sqlite3.connect('users.db')
+                                cur = con.cursor()
+                                result = cur.execute('''SELECT account
+                                                          FROM user WHERE account = ?''', (text,)).fetchall()
+                                print(result)
+                                if result is None:
+                                    cur.execute('INSERT INTO user VALUES(?, ?)', (text, None,))
+                                    con.commit()
+                                text = ''
+                            elif event.key == pygame.K_BACKSPACE:
+                                text = text[:-1]
+                            else:
+                                text += event.unicode
+
+                screen.fill((30, 30, 30))
+                # Render the current text.
+                txt_surface = font.render(text, True, color)
+                # Resize the box if the text is too long.
+                width = max(800, txt_surface.get_width() + 10)
+                input_box.w = width
+                # Blit the text.
+                screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+                # Blit the input_box rect.
+                pygame.draw.rect(screen, color, input_box, 2)
+
+                pygame.display.flip()
+                clock.tick(30)
         elif event.type == pygame.MOUSEBUTTONDOWN and 1690 <= event.pos[0] <= 1690 + 73 and \
                 22 <= event.pos[1] <= 22 + 73 and first_page:
             screen.blit(image_gears_tap, (1690, 22))
@@ -355,6 +465,60 @@ while running:
             second_page = False
             level_page = False
             screen.blit(image_question, (1574, 22))
+            font = pygame.font.Font(None, 100)
+            clock = pygame.time.Clock()
+            input_box = pygame.Rect(500, 300, 10, 200)
+            color_inactive = pygame.Color('lightskyblue3')
+            color_active = pygame.Color('dodgerblue2')
+            color = color_inactive
+            active = False
+            text = ''
+            done = False
+
+            while not done:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        done = True
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        # If the user clicked on the input_box rect.
+                        if input_box.collidepoint(event.pos):
+                            # Toggle the active variable.
+                            active = not active
+                        else:
+                            active = False
+                        # Change the current color of the input box.
+                        color = color_active if active else color_inactive
+                    if event.type == pygame.KEYDOWN:
+                        if active:
+                            if event.key == pygame.K_RETURN:
+                                print(text)
+                                con = sqlite3.connect('users.db')
+                                cur = con.cursor()
+                                result = cur.execute('''SELECT account
+                                                          FROM user WHERE account=?''', (text,)).fetchall()
+                                print(result)
+                                if len(result) == 0:
+                                    cur.execute('INSERT INTO user VALUES(?, ?)', (text, None,))
+                                    con.commit()
+                                text = ''
+                            elif event.key == pygame.K_BACKSPACE:
+                                text = text[:-1]
+                            else:
+                                text += event.unicode
+
+                screen.fill((30, 30, 30))
+                # Render the current text.
+                txt_surface = font.render(text, True, color)
+                # Resize the box if the text is too long.
+                width = max(800, txt_surface.get_width() + 10)
+                input_box.w = width
+                # Blit the text.
+                screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+                # Blit the input_box rect.
+                pygame.draw.rect(screen, color, input_box, 2)
+
+                pygame.display.flip()
+                clock.tick(30)
         elif event.type == pygame.MOUSEBUTTONDOWN and 1690 <= event.pos[0] <= 1690 + 73 and \
                 22 <= event.pos[1] <= 22 + 73 and second_page:
             screen.blit(image_gears_tap, (1690, 22))
@@ -447,16 +611,24 @@ while running:
                 400 <= event.pos[1] <= 400 + 140 and level_page:
             screen.blit(image_level_but, (1100, 400))
             if ab == cosrs[level - 1]:
-                connn = sqlite3.connect("nonagramm.db")
-                cursorr = connn.cursor()
+                con = sqlite3.connect('users.db')
+                cur = con.cursor()
                 myfont = pygame.font.SysFont('ofont.ru_President.ttf', 100)
                 textsurface = myfont.render('УРОВЕНЬ ПРОЙДЕН', True, (0, 0, 0))
                 print('YOU WIN')
+                result = cur.execute('''SELECT score FROM user WHERE account = ?''', (text,)).fetchone()
+                a = int(result)
+                print(result)
+                if result is None:
+                    cur.execute('INSERT INTO user VALUES(?, ?)', (None, 10,))
+                    con.commit()
+
+                else:
+                    cur.execute('UPDATE user SET score = ?', (10,))
+                    con.commit()
                 screen.blit(textsurface, (550, 800))
                 pygame.display.update()
                 pygame.time.wait(4000)
-                cursorr.execute("DELETE FROM level_coords WHERE points = ?", (not None,))
-                connn.commit()
                 image_level_spisok = pygame.image.load('sprites/заставка фона для уровней.png').convert_alpha()
                 screen.blit(image_level_spisok, (0, 0))
                 image_go_back = pygame.image.load('sprites/назад.png').convert_alpha()
@@ -551,6 +723,60 @@ while running:
             second_page = False
             level_page = False
             screen.blit(image_question, (1574, 22))
+            font = pygame.font.Font(None, 100)
+            clock = pygame.time.Clock()
+            input_box = pygame.Rect(500, 300, 10, 200)
+            color_inactive = pygame.Color('lightskyblue3')
+            color_active = pygame.Color('dodgerblue2')
+            color = color_inactive
+            active = False
+            text = ''
+            done = False
+
+            while not done:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        done = True
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        # If the user clicked on the input_box rect.
+                        if input_box.collidepoint(event.pos):
+                            # Toggle the active variable.
+                            active = not active
+                        else:
+                            active = False
+                        # Change the current color of the input box.
+                        color = color_active if active else color_inactive
+                    if event.type == pygame.KEYDOWN:
+                        if active:
+                            if event.key == pygame.K_RETURN:
+                                print(text)
+                                con = sqlite3.connect('users.db')
+                                cur = con.cursor()
+                                result = cur.execute('''SELECT account
+                                                          FROM user WHERE account = ?''', (text,)).fetchall()
+                                print(result)
+                                if result is None:
+                                    cur.execute('INSERT INTO user VALUES(?, ?)', (text, None,))
+                                    con.commit()
+                                text = ''
+                            elif event.key == pygame.K_BACKSPACE:
+                                text = text[:-1]
+                            else:
+                                text += event.unicode
+
+                screen.fill((30, 30, 30))
+                # Render the current text.
+                txt_surface = font.render(text, True, color)
+                # Resize the box if the text is too long.
+                width = max(800, txt_surface.get_width() + 10)
+                input_box.w = width
+                # Blit the text.
+                screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+                # Blit the input_box rect.
+                pygame.draw.rect(screen, color, input_box, 2)
+
+                pygame.display.flip()
+                clock.tick(30)
         elif event.type == pygame.MOUSEBUTTONDOWN and 1690 <= event.pos[0] <= 1690 + 73 and \
                 22 <= event.pos[1] <= 22 + 73 and level_page:
             screen.blit(image_gears_tap, (1690, 22))
