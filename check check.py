@@ -244,7 +244,6 @@ while running:
                 'sprites/супер пупер заставка тыщу лет фотожопила поставьте полный балл за такое умоляю.png').convert_alpha()
             screen.blit(image_helpa, (0, 0))
             image_go_back = pygame.image.load('sprites/назад.png').convert_alpha()
-            screen.blit(image_go_back, (15, 15))
             first_page = False
             info_page = False
             settings_page = True
@@ -277,24 +276,30 @@ while running:
                     if event.type == pygame.KEYDOWN:
                         if active:
                             if event.key == pygame.K_RETURN:
-                                # print(text)
+                                print(text)
                                 con = sqlite3.connect('users.db')
                                 cur = con.cursor()
                                 result = cur.execute('''SELECT account
                                                           FROM user WHERE account = ?''',
                                                      (text,)).fetchall()
-                                # print(len(result) == 0)
+                                print(result)
                                 if len(result) == 0:
-                                    print(1)
                                     cur.execute('INSERT INTO user VALUES(?, ?)', (text, 0))
                                     con.commit()
-                                text = ''
+                                own = cur.execute('''SELECT score FROM user WHERE account = ?''', (text,)).fetchone()
+                                fonk = pygame.font.SysFont('ofont.ru_President.ttf', 100)
+                                scorik = fonk.render(f'Ваш результат, {text}: {own[0]} Очков', True, (255, 255, 255))
+                                screen.blit(scorik, (470, 650))
+                                pygame.display.update()
+                                pygame.time.wait(4000)
+                                done = True
                             elif event.key == pygame.K_BACKSPACE:
                                 text = text[:-1]
                             else:
                                 text += event.unicode
 
                 screen.fill((30, 30, 30))
+                screen.blit(image_go_back, (15, 15))
                 # Render the current text.
                 txt_surface = font.render(text, True, color)
                 # Resize the box if the text is too long.
@@ -376,16 +381,24 @@ while running:
                                                           FROM user WHERE account = ?''',
                                                      (text,)).fetchall()
                                 print(result)
+                                print(done)
                                 if len(result) == 0:
                                     cur.execute('INSERT INTO user VALUES(?, ?)', (text, 0))
                                     con.commit()
-                                text = ''
+                                own = cur.execute('''SELECT score FROM user WHERE account = ?''', (text,)).fetchone()
+                                fonk = pygame.font.SysFont('ofont.ru_President.ttf', 100)
+                                scorik = fonk.render(f'Ваш результат, {text}: {own[0]} Очков', True, (255, 255, 255))
+                                screen.blit(scorik, (470, 650))
+                                pygame.display.update()
+                                pygame.time.wait(4000)
+                                done = True
                             elif event.key == pygame.K_BACKSPACE:
                                 text = text[:-1]
                             else:
                                 text += event.unicode
 
                 screen.fill((30, 30, 30))
+                screen.blit(image_go_back, (15, 15))
                 # Render the current text.
                 txt_surface = font.render(text, True, color)
                 # Resize the box if the text is too long.
@@ -502,19 +515,26 @@ while running:
                                 con = sqlite3.connect('users.db')
                                 cur = con.cursor()
                                 result = cur.execute('''SELECT account
-                                                          FROM user WHERE account=?''',
+                                                          FROM user WHERE account = ?''',
                                                      (text,)).fetchall()
                                 print(result)
                                 if len(result) == 0:
                                     cur.execute('INSERT INTO user VALUES(?, ?)', (text, 0))
                                     con.commit()
-                                text = ''
+                                own = cur.execute('''SELECT score FROM user WHERE account = ?''', (text,)).fetchone()
+                                fonk = pygame.font.SysFont('ofont.ru_President.ttf', 100)
+                                scorik = fonk.render(f'Ваш результат, {text}: {own[0]} Очков', True, (255, 255, 255))
+                                screen.blit(scorik, (470, 650))
+                                pygame.display.update()
+                                pygame.time.wait(4000)
+                                done = True
                             elif event.key == pygame.K_BACKSPACE:
                                 text = text[:-1]
                             else:
                                 text += event.unicode
 
                 screen.fill((30, 30, 30))
+                screen.blit(image_go_back, (15, 15))
                 # Render the current text.
                 txt_surface = font.render(text, True, color)
                 # Resize the box if the text is too long.
@@ -629,14 +649,13 @@ while running:
                 print('YOU WIN')
                 result = cur.execute('''SELECT score FROM user WHERE account = ?''',
                                      (text,)).fetchone()
-                a = int(result)
-                print(result)
-                if result is None:
-                    cur.execute('INSERT INTO user VALUES(?, ?)', (None, 10,))
+                print(result[0])
+                if len(result) == 0:
+                    cur.execute('INSERT INTO user VALUES(?, ?) WHERE account = ?', ('', 10, text,))
                     con.commit()
 
                 else:
-                    cur.execute('UPDATE user SET score = ?', (10,))
+                    cur.execute('UPDATE user SET score = ? WHERE account = ?', (result[0] + 10, text,))
                     con.commit()
                 screen.blit(textsurface, (550, 800))
                 pygame.display.update()
@@ -748,6 +767,12 @@ while running:
             active = False
             text = ''
             done = False
+            if done:
+                own = cur.execute('''SELECT score FROM user WHERE account = ?''', (text,)).fetchone()
+                fonk = pygame.font.SysFont('ofont.ru_President.ttf', 100)
+                scorik = fonk.render(f'Ваш результат, {text}: {own[0]} Очков', True, (255, 255, 255))
+                screen.blit(scorik, (550, 800))
+                pygame.display.update()
 
             while not done:
                 for event in pygame.event.get():
@@ -772,16 +797,23 @@ while running:
                                                           FROM user WHERE account = ?''',
                                                      (text,)).fetchall()
                                 print(result)
-                                if result is None:
-                                    cur.execute('INSERT INTO user VALUES(?, ?)', (text, None,))
+                                if len(result) == 0:
+                                    cur.execute('INSERT INTO user VALUES(?, ?)', (text, 0))
                                     con.commit()
-                                text = ''
+                                own = cur.execute('''SELECT score FROM user WHERE account = ?''', (text,)).fetchone()
+                                fonk = pygame.font.SysFont('ofont.ru_President.ttf', 100)
+                                scorik = fonk.render(f'Ваш результат, {text}: {own[0]} Очков', True, (255, 255, 255))
+                                screen.blit(scorik, (470, 650))
+                                pygame.display.update()
+                                pygame.time.wait(4000)
+                                done = True
                             elif event.key == pygame.K_BACKSPACE:
                                 text = text[:-1]
                             else:
                                 text += event.unicode
 
                 screen.fill((30, 30, 30))
+                screen.blit(image_go_back, (15, 15))
                 # Render the current text.
                 txt_surface = font.render(text, True, color)
                 # Resize the box if the text is too long.
@@ -819,8 +851,6 @@ while running:
         if event.type == pygame.MOUSEBUTTONUP and 1574 <= event.pos[0] <= 1574 + 73 and \
                 22 <= event.pos[1] <= 22 + 73 and settings_page:
             screen.blit(image_question, (1574, 22))
-            screen.blit(image_question, (1574, 22))
-            screen.blit(image_question, (1574, 22))
             image_helpa = pygame.image.load('sprites/катянебей это хелп.png').convert_alpha()
             screen.blit(image_helpa, (0, 0))
             image_go_back = pygame.image.load('sprites/назад.png').convert_alpha()
@@ -834,6 +864,8 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN and 1574 <= event.pos[0] <= 1574 + 73 and \
                 22 <= event.pos[1] <= 22 + 73 and settings_page:
             screen.blit(image_question_tap, (1574, 22))
+
+
 
     pygame.display.flip()
 pygame.quit()
